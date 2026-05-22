@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Modules\Core\Http\Controllers\CoreController;
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('cores', CoreController::class)->names('core');
-});
+// Core module exposes no web routes by design.
+// It provides BFF aggregators, security middleware, and caching infrastructure
+// consumed by other modules and the root application.

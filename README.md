@@ -57,4 +57,6 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-# > Đọc file spec/architecture.md và implement theo đúng spec đó
+npx vite build --config vite.config.frontend.js
+
+# > Đọc file spec/audit.md và implement theo đúng spec đó

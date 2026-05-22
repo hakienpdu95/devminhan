@@ -1,0 +1,29 @@
+// Modern theme — clean, indigo-shifted, more rounded
+:root {
+  // Colors
+  --color-bg-subtle:       #f5f3ff;
+  --color-surface-raised:  #ede9fe;
+  --color-border:          #e0e7ff;
+  --color-border-strong:   #c7d2fe;
+
+  --color-primary:         #6366f1;
+  --color-primary-hover:   #4f46e5;
+  --color-primary-text:    #ffffff;
+  --color-secondary:       #0ea5e9;
+  --color-accent:          #f43f5e;
+
+  // Layout
+  --header-height:    72px;
+  --container-width:  1280px;
+
+  // Shape — more rounded
+  --radius-sm:   0.375rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1rem;
+  --radius-full: 9999px;
+
+  // Shadows — indigo-tinted
+  --shadow-sm: 0 1px 3px 0 rgb(99 102 241 / 0.08);
+  --shadow-md: 0 4px 12px -2px rgb(99 102 241 / 0.12), 0 2px 4px -2px rgb(99 102 241 / 0.06);
+  --shadow-lg: 0 12px 24px -4px rgb(99 102 241 / 0.16), 0 4px 8px -4px rgb(99 102 241 / 0.08);
+}

@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Modules\Core\Http\Controllers\CoreController;
-
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('cores', CoreController::class)->names('core');
-});
+// Core module exposes no API routes by design.
+// It provides BFF aggregators, security middleware, and caching infrastructure
+// consumed by other modules — not directly callable.

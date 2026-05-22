@@ -37,11 +37,14 @@ class PageDataAggregator extends BaseAggregator
 
     /**
      * Fetch page data by slug.
+     * Slug is sanitized to prevent path traversal / URL injection upstream.
      */
     public function getPage(string $slug): ApiResponse
     {
-        return $this->remember("bff:page:{$slug}", function () use ($slug) {
-            return $this->client->get("api/pages/{$slug}");
+        $clean = $this->sanitizeSlug($slug, 'page slug');
+
+        return $this->remember("bff:page:{$clean}", function () use ($clean) {
+            return $this->client->get("api/pages/{$clean}");
         });
     }
 }

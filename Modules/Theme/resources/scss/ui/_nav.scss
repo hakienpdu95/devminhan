@@ -1,0 +1,117 @@
+@use '../tools' as *;
+
+// ── Main navigation ───────────────────────────────────────────────────────
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: var(--transition-colors);
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--color-text);
+      background: var(--color-surface-raised);
+    }
+
+    &:focus-visible { @include focus-ring; }
+
+    &--active {
+      color: var(--color-primary);
+      background: var(--color-surface-raised);
+    }
+  }
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    &::after {
+      content: '/';
+      color: var(--color-border-strong);
+    }
+
+    &:last-child::after { display: none; }
+  }
+
+  &__link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: var(--transition-colors);
+
+    &:hover { color: var(--color-primary); }
+  }
+
+  &__current {
+    color: var(--color-text);
+    font-weight: var(--font-medium);
+    @include truncate;
+    max-width: 200px;
+  }
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding-inline: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: var(--transition-colors);
+
+    &:hover:not(.pagination__item--active):not(.pagination__item--disabled) {
+      background: var(--color-surface-raised);
+      color: var(--color-text);
+      border-color: var(--color-border-strong);
+    }
+
+    &:focus-visible { @include focus-ring; }
+
+    &--active {
+      background: var(--color-primary);
+      color: var(--color-primary-text);
+      border-color: var(--color-primary);
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+}

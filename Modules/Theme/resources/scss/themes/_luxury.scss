@@ -1,0 +1,48 @@
+// Luxury theme — dark stone, warm gold, sharp geometry
+:root {
+  // Surfaces (dark)
+  --color-bg:              #0c0a09;
+  --color-bg-subtle:       #1c1917;
+  --color-surface:         #1c1917;
+  --color-surface-raised:  #292524;
+  --color-border:          #3f3734;
+  --color-border-strong:   #57534e;
+
+  // Text (light on dark)
+  --color-text:            #e7e5e4;
+  --color-text-muted:      #a8a29e;
+  --color-text-subtle:     #78716c;
+  --color-text-inverse:    #0c0a09;
+
+  // Brand (warm gold)
+  --color-primary:         #d97706;
+  --color-primary-hover:   #f59e0b;
+  --color-primary-text:    #0c0a09;
+  --color-secondary:       #92400e;
+  --color-accent:          #fbbf24;
+
+  // Semantic (dark-adjusted)
+  --color-success:         #4ade80;
+  --color-success-bg:      #14532d;
+  --color-warning:         #fbbf24;
+  --color-warning-bg:      #451a03;
+  --color-error:           #f87171;
+  --color-error-bg:        #450a0a;
+  --color-info:            #67e8f9;
+  --color-info-bg:         #083344;
+
+  // Layout
+  --header-height:    80px;
+  --container-width:  1024px;
+
+  // Shape — sharp, minimal
+  --radius-sm:   0.125rem;
+  --radius-md:   0.25rem;
+  --radius-lg:   0.375rem;
+  --radius-full: 9999px;
+
+  // Shadows — dark, deep
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.7), 0 4px 8px -4px rgb(0 0 0 / 0.5);
+}

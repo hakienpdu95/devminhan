@@ -41,5 +41,6 @@ class CoreServiceProvider extends ModuleServiceProvider
 
         $router->aliasMiddleware('security.headers', \Modules\Core\Security\SecurityHeadersMiddleware::class);
         $router->aliasMiddleware('api.token', \Modules\Core\Security\ApiTokenValidationMiddleware::class);
+        $router->aliasMiddleware('throttle.frontend', \Modules\Core\Security\RateLimitMiddleware::class);
     }
 }

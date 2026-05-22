@@ -12,7 +12,8 @@ abstract class BaseQuery
     protected int $cacheTtl = 300;
 
     /**
-     * Cache tags for this query. Must use tagged cache driver (Redis).
+     * Cache tags for this query. Only used when the driver supports tagging
+     * (redis/memcached); falls back to plain remember() otherwise.
      * @return string[]
      */
     protected function cacheTags(): array
@@ -26,7 +27,7 @@ abstract class BaseQuery
     abstract protected function cacheKey(): string;
 
     /**
-     * Execute the query logic against the CRM via Aggregator.
+     * Execute the query logic (typically calls a BFF Aggregator).
      */
     abstract protected function fetch(): mixed;
 
@@ -36,7 +37,14 @@ abstract class BaseQuery
             return $this->fetch();
         }
 
+        $key = $this->cacheKey();
+        $ttl = $this->cacheTtl;
+
+        if (! method_exists(Cache::getStore(), 'tags')) {
+            return Cache::remember($key, $ttl, fn () => $this->fetch());
+        }
+
         return Cache::tags($this->cacheTags())
-            ->remember($this->cacheKey(), $this->cacheTtl, fn () => $this->fetch());
+            ->remember($key, $ttl, fn () => $this->fetch());
     }
 }

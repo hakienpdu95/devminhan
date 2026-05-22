@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             \Modules\Core\Security\SecurityHeadersMiddleware::class,
+            \Modules\Core\Security\RateLimitMiddleware::class,
             // Apply default theme to every web request; per-route groups override with theme:luxury etc.
             \Modules\Theme\Http\Middleware\ResolveThemeMiddleware::class,
         ]);

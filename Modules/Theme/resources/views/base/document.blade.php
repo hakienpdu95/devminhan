@@ -25,7 +25,12 @@
 
     @yield('head_extra')
 
+    {{-- Base app shell --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Theme CSS — compiled từ Modules/Theme/resources/scss/theme-{name}.scss --}}
+    @vite(["Modules/Theme/resources/scss/theme-" . ($theme ?? 'default') . ".scss"])
+
     @stack('styles')
 </head>
 <body class="@yield('body_class', '')">
