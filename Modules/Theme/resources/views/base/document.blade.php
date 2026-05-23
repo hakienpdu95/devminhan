@@ -9,6 +9,7 @@
     <title>@yield('title', config('app.name'))</title>
     <meta name="description" content="@yield('meta_description', '')">
     <meta name="robots" content="@yield('meta_robots', 'index,follow')">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Open Graph --}}
     @hasSection('og_title')

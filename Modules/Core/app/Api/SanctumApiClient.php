@@ -48,6 +48,7 @@ class SanctumApiClient
             foreach ($requests as $key => $endpoint) {
                 $pool->as($key)
                     ->withToken($this->token)
+                    ->acceptJson()
                     ->timeout($this->timeout)
                     ->get($this->url($endpoint));
             }
@@ -75,8 +76,14 @@ class SanctumApiClient
 
         try {
             $http = Http::withToken($this->token)
+                ->acceptJson()
                 ->timeout($this->timeout)
-                ->retry($this->retryTimes, $this->retryMs);
+                ->retry(
+                    $this->retryTimes,
+                    $this->retryMs,
+                    fn ($e) => $e instanceof \Illuminate\Http\Client\ConnectionException,
+                    false
+                );
 
             /** @var Response $response */
             $response = match ($method) {
@@ -103,16 +110,11 @@ class SanctumApiClient
             throw ApiException::unauthorized($endpoint);
         }
 
-        if ($response->status() === 404) {
-            return ApiResponse::error('Not found', 404);
-        }
-
         if ($response->failed()) {
             Log::warning('CRM API returned error', [
                 'endpoint' => $endpoint,
-                'status' => $response->status(),
+                'status'   => $response->status(),
             ]);
-            return ApiResponse::error($response->json('message', 'API error'), $response->status());
         }
 
         $body = $response->json() ?? [];

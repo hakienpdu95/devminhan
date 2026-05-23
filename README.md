@@ -59,4 +59,4 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 npx vite build --config vite.config.frontend.js
 
-# > Đọc file spec/audit.md và implement theo đúng spec đó
+# > Đọc file spec/form.md và implement theo đúng spec đó
