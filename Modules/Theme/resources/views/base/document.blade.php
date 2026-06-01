@@ -1,9 +1,23 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    data-theme="{{ $theme ?? config('theme.default', 'brand-light') }}"
+>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- Anti-FOUC: apply the visitor's stored theme before first paint.
+         The server already renders the cookie value; this only reconciles
+         a localStorage choice made before the cookie round-tripped. --}}
+    <script nonce="{{ $cspNonce ?? '' }}">
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t) document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {}
+        })();
+    </script>
 
     {{-- SEO --}}
     <title>@yield('title', config('app.name'))</title>
@@ -26,15 +40,12 @@
 
     @yield('head_extra')
 
-    {{-- Base app shell --}}
+    {{-- App shell: Tailwind v4 + DaisyUI (all themes) + Alpine --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    {{-- Theme CSS — compiled từ Modules/Theme/resources/scss/theme-{name}.scss --}}
-    @vite(["Modules/Theme/resources/scss/theme-" . ($theme ?? 'default') . ".scss"])
 
     @stack('styles')
 </head>
-<body class="@yield('body_class', '')">
+<body class="min-h-screen bg-base-100 text-base-content antialiased @yield('body_class')">
 
     @yield('body')
 

@@ -72,12 +72,15 @@ devminhan/
 │   │   └── Providers/
 │   ├── Blog/
 │   ├── Page/
-│   ├── Theme/                         # Theme system
-│   │   ├── Resources/views/
-│   │   │   ├── base/
-│   │   │   ├── themes/
-│   │   │   └── overrides/
-│   │   └── Actions/ResolveThemeAction.php
+│   ├── Theme/                         # Theme + layout system (DaisyUI-native)
+│   │   ├── app/
+│   │   │   ├── Actions/ResolveThemeAction.php
+│   │   │   └── Http/Middleware/ResolveThemeMiddleware.php
+│   │   └── resources/views/
+│   │       ├── base/document.blade.php     # <html data-theme>, SEO, @vite
+│   │       ├── layouts/                     # app | landing | minimal (extend base)
+│   │       ├── partials/                    # navbar, footer, theme-switcher
+│   │       └── overrides/
 │   └── ...
 ├── app/
 │   ├── Http/Controllers/              # Controller mỏng
@@ -95,10 +98,30 @@ devminhan/
 
 ## 7. Công nghệ & Package đã cài
 
+**Backend / kiến trúc**
 - `nwidart/laravel-modules`
 - `lorisleiva/laravel-actions`
 - Redis
 - Laravel Sanctum (client side)
+
+**Frontend / UI (trọng tâm giao diện)**
+- **DaisyUI 5** — nguồn token màu/shape duy nhất qua thuộc tính `data-theme`.
+  Không tự xây hệ SCSS token. Hai theme thương hiệu custom (`brand-light`, `brand-dark`)
+  + nhiều theme built-in, gói chung 1 file CSS, đổi theme = đổi 1 thuộc tính.
+- **Alpine.js 3** — tương tác client (theme switcher, survey form đa bước…).
+- **Tailwind CSS v4** — utility + `@plugin "daisyui"` (vite-native, không cần `tailwind.config.js`).
+- Build bằng `vite.config.frontend.js` → `public/build/frontend`
+  (Laravel trỏ qua `Vite::useBuildDirectory('build/frontend')`).
+- Module JS tải lazy theo trang: `swiper`, `tom-select`, `toastify`, `qrcode`.
+
+### Nguyên tắc UI/UX
+- **Theme (màu) ⟂ Layout (cấu trúc)** — hai trục độc lập, phối tự do.
+  Theme = `data-theme`; Layout = master Blade kế thừa từ `theme::base.document`.
+- Component dùng class DaisyUI (`navbar`, `card`, `btn`, `input`…) + utility ngữ nghĩa
+  (`bg-base-100`, `text-base-content`, `btn-primary`) — **không hardcode màu**, để mọi
+  theme tự áp dụng.
+- Layout mới = thêm 1 file trong `layouts/` + đăng ký `config/theme.php`.
+  Theme mới = khai báo trong `app.css` + đăng ký `config/theme.php`.
 
 ## 8. Hướng dẫn thực thi (dành cho Claude / Developer)
 

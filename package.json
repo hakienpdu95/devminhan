@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "vite --config vite.config.frontend.js",
+        "build": "vite build --config vite.config.frontend.js",
         "dev:frontend": "vite --config vite.config.frontend.js",
         "build:frontend": "vite build --config vite.config.frontend.js"
     },
@@ -19,6 +19,7 @@
     "dependencies": {
         "alpinejs": "^3.15.12",
         "daisyui": "^5.5.19",
+        "echarts": "^6.1.0",
         "qrcode-generator": "^2.0.4",
         "swiper": "^12.1.4",
         "toastify-js": "^1.12.0",

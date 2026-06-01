@@ -26,9 +26,14 @@ class SanctumApiClient
         $this->retryMs = config('bff.retry_ms', 500);
     }
 
-    public function get(string $endpoint, array $params = []): ApiResponse
+    /**
+     * @param int|null $timeout    Override per-call (giây). null = dùng config bff.timeout.
+     * @param int|null $retryTimes Override per-call. null = dùng config bff.retry_times.
+     *                             Truyền 0 để tắt retry hoàn toàn (dùng cho page-load schema fetch).
+     */
+    public function get(string $endpoint, array $params = [], ?int $timeout = null, ?int $retryTimes = null): ApiResponse
     {
-        return $this->request('get', $endpoint, $params);
+        return $this->request('get', $endpoint, $params, $timeout, $retryTimes);
     }
 
     public function post(string $endpoint, array $data = []): ApiResponse
@@ -70,16 +75,18 @@ class SanctumApiClient
         return $responses;
     }
 
-    private function request(string $method, string $endpoint, array $payload = []): ApiResponse
+    private function request(string $method, string $endpoint, array $payload = [], ?int $timeout = null, ?int $retryTimes = null): ApiResponse
     {
-        $url = $this->url($endpoint);
+        $url        = $this->url($endpoint);
+        $timeout    = $timeout    ?? $this->timeout;
+        $retryTimes = $retryTimes ?? $this->retryTimes;
 
         try {
             $http = Http::withToken($this->token)
                 ->acceptJson()
-                ->timeout($this->timeout)
+                ->timeout($timeout)
                 ->retry(
-                    $this->retryTimes,
+                    $retryTimes,
                     $this->retryMs,
                     fn ($e) => $e instanceof \Illuminate\Http\Client\ConnectionException,
                     false

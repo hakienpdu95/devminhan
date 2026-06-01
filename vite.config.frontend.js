@@ -33,11 +33,12 @@ import path             from 'path';
 
 /* ─── Tên file JS output (entry points) ─── */
 const JS_OUTPUT = {
-  'app':        'assets/app.[hash].js',
-  'toastify':   'assets/toastify.[hash].js',
-  'tom-select': 'assets/tom-select.[hash].js',
-  'swiper':     'assets/swiper.[hash].js',
-  'qrcode':     'assets/qrcode.[hash].js',
+  'app':          'assets/app.[hash].js',
+  'toastify':     'assets/toastify.[hash].js',
+  'tom-select':   'assets/tom-select.[hash].js',
+  'swiper':       'assets/swiper.[hash].js',
+  'qrcode':       'assets/qrcode.[hash].js',
+  'ai-readiness': 'assets/ai-readiness.[hash].js',
 };
 
 /* ─── Tên file CSS output ─── */
@@ -75,6 +76,7 @@ export default defineConfig(({ mode }) => {
           'resources/js/modules/tom-select.js',
           'resources/js/modules/swiper.js',
           'resources/js/modules/qrcode.js',
+          'resources/js/modules/ai-readiness.js',
         ],
         refresh: [
           'resources/views/**/*.blade.php',
@@ -158,12 +160,14 @@ export default defineConfig(({ mode }) => {
            * chunk này sẽ không match JS — không gây lỗi, chỉ unused.
            */
           manualChunks(id) {
-            if (id.includes('node_modules/alpinejs'))   return 'vendor-alpine';
-            if (id.includes('node_modules/daisyui'))    return 'vendor-daisyui';
-            if (id.includes('node_modules/swiper'))     return 'vendor-swiper';
-            if (id.includes('node_modules/tom-select')) return 'vendor-tom-select';
+            if (id.includes('node_modules/alpinejs'))        return 'vendor-alpine';
+            if (id.includes('node_modules/daisyui'))         return 'vendor-daisyui';
+            if (id.includes('node_modules/swiper'))          return 'vendor-swiper';
+            if (id.includes('node_modules/tom-select'))      return 'vendor-tom-select';
             if (id.includes('node_modules/toastify-js'))     return 'vendor-toastify';
-            if (id.includes('node_modules/qrcode-generator')) return 'vendor-qrcode';
+            if (id.includes('node_modules/qrcode-generator'))return 'vendor-qrcode';
+            if (id.includes('node_modules/echarts') || id.includes('node_modules/zrender'))
+                                                             return 'vendor-echarts';
           },
         },
       },

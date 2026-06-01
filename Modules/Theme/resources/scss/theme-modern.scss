@@ -1,8 +1,0 @@
-@use 'sass:math';
-@use 'sass:map';
-
-@use 'tokens';           // CSS custom properties — default base values
-@use 'themes/modern';    // Override: indigo palette, rounded shapes
-@use 'tools' as *;       // Mixins + functions — zero CSS output
-@use 'ui';               // All visual styles (use CSS vars only)
-@use 'pages';            // Page-specific styles

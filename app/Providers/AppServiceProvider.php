@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Assets are built with vite.config.frontend.js → public/build/frontend.
+        // Point Laravel's @vite directive at that manifest.
+        Vite::useBuildDirectory('build/frontend');
     }
 }

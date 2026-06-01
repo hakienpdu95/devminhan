@@ -10,9 +10,28 @@ class SecurityHeadersMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Per-request nonce — whitelists only our known inline scripts (e.g. the
+        // anti-FOUC theme snippet in base/document.blade.php) without using
+        // 'unsafe-inline', which would allow arbitrary injected scripts.
+        $nonce = base64_encode(random_bytes(16));
+        view()->share('cspNonce', $nonce);
+
         $response = $next($request);
 
-        $csp = config('security.csp', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:;");
+        $csp = implode('; ', [
+            "default-src 'self'",
+            // 'unsafe-eval' needed by Alpine.js (uses new Function() internally).
+            // nonce whitelists the anti-FOUC inline script only.
+            "script-src 'self' 'unsafe-eval' 'nonce-{$nonce}'",
+            // Google Fonts stylesheet served from fonts.googleapis.com.
+            // 'unsafe-inline' needed for Tailwind/DaisyUI injected styles in dev.
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "img-src 'self' data: https:",
+            // fonts.gstatic.com serves the actual font files.
+            "font-src 'self' https://fonts.gstatic.com https:",
+            "connect-src 'self'",
+            "frame-ancestors 'none'",
+        ]);
 
         $response->headers->set('Content-Security-Policy', $csp);
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');

@@ -1,5 +1,91 @@
 @import 'tailwindcss';
-@plugin "daisyui";
+
+/* ── DaisyUI ───────────────────────────────────────────────────────────────
+ * Built-in themes enabled here are compiled into the single CSS bundle and
+ * switchable at runtime via the `data-theme` attribute. The custom brand
+ * themes are declared below with `@plugin "daisyui/theme"`.
+ * Keep this list in sync with `config/theme.php` → `themes`.
+ * ────────────────────────────────────────────────────────────────────────── */
+@plugin "daisyui" {
+    themes: corporate, nord, emerald, cupcake, winter, retro, luxury, dracula, business, synthwave;
+}
+
+/* ── Custom brand theme — light (default) ─────────────────────────────────── */
+@plugin "daisyui/theme" {
+    name: "brand-light";
+    default: true;
+    color-scheme: light;
+
+    --color-base-100: oklch(100% 0 0);
+    --color-base-200: oklch(97% 0.004 264);
+    --color-base-300: oklch(93% 0.007 264);
+    --color-base-content: oklch(25% 0.02 264);
+
+    --color-primary: oklch(55% 0.22 264);
+    --color-primary-content: oklch(98% 0.01 264);
+    --color-secondary: oklch(62% 0.18 305);
+    --color-secondary-content: oklch(98% 0.01 305);
+    --color-accent: oklch(72% 0.15 195);
+    --color-accent-content: oklch(22% 0.03 195);
+    --color-neutral: oklch(28% 0.02 264);
+    --color-neutral-content: oklch(96% 0.01 264);
+
+    --color-info: oklch(70% 0.14 232);
+    --color-info-content: oklch(20% 0.04 232);
+    --color-success: oklch(72% 0.17 150);
+    --color-success-content: oklch(20% 0.04 150);
+    --color-warning: oklch(80% 0.16 85);
+    --color-warning-content: oklch(25% 0.05 85);
+    --color-error: oklch(64% 0.21 25);
+    --color-error-content: oklch(98% 0.01 25);
+
+    --radius-selector: 0.5rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
+
+/* ── Custom brand theme — dark ────────────────────────────────────────────── */
+@plugin "daisyui/theme" {
+    name: "brand-dark";
+    color-scheme: dark;
+
+    --color-base-100: oklch(21% 0.02 264);
+    --color-base-200: oklch(18% 0.02 264);
+    --color-base-300: oklch(15% 0.02 264);
+    --color-base-content: oklch(92% 0.01 264);
+
+    --color-primary: oklch(66% 0.2 264);
+    --color-primary-content: oklch(15% 0.03 264);
+    --color-secondary: oklch(70% 0.16 305);
+    --color-secondary-content: oklch(15% 0.03 305);
+    --color-accent: oklch(75% 0.14 195);
+    --color-accent-content: oklch(15% 0.03 195);
+    --color-neutral: oklch(28% 0.02 264);
+    --color-neutral-content: oklch(92% 0.01 264);
+
+    --color-info: oklch(72% 0.14 232);
+    --color-info-content: oklch(15% 0.04 232);
+    --color-success: oklch(74% 0.17 150);
+    --color-success-content: oklch(15% 0.04 150);
+    --color-warning: oklch(82% 0.16 85);
+    --color-warning-content: oklch(20% 0.05 85);
+    --color-error: oklch(68% 0.2 25);
+    --color-error-content: oklch(15% 0.03 25);
+
+    --radius-selector: 0.5rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,12 +93,120 @@
 @source '../**/*.js';
 @source '../../Modules/**/*.blade.php';
 
+/* ── AI Readiness page — thuchoc brand theme ──────────────────────────────── */
+@plugin "daisyui/theme" {
+    name: "thuchoc";
+    color-scheme: light;
+
+    --color-base-100: #ffffff;
+    --color-base-200: #f3f7fd;
+    --color-base-300: #e6eefb;
+    --color-base-content: #14224a;
+
+    --color-primary: #2f6bff;
+    --color-primary-content: #ffffff;
+    --color-secondary: #13b6e6;
+    --color-secondary-content: #04263a;
+    --color-accent: #7c5cff;
+    --color-accent-content: #ffffff;
+    --color-neutral: #0e1b3a;
+    --color-neutral-content: #dbe6ff;
+
+    --color-info: #2f6bff;
+    --color-info-content: #ffffff;
+    --color-success: #12b886;
+    --color-success-content: #03241a;
+    --color-warning: #f59e0b;
+    --color-warning-content: #3a2400;
+    --color-error: #ef4444;
+    --color-error-content: #ffffff;
+
+    --radius-selector: 0.7rem;
+    --radius-field: 0.65rem;
+    --radius-box: 1rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+}
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 [x-cloak] { display: none !important; }
+
+/* ── AI Readiness page — custom visual classes ────────────────────────────── */
+
+/* brand gradient text */
+.text-grad {
+    background: linear-gradient(100deg, #2f6bff 0%, #13b6e6 60%, #7c5cff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* mesh + hairline hero background */
+.mesh {
+    background:
+        radial-gradient(60% 50% at 82% 8%,  rgba(47, 107, 255, .16), transparent 70%),
+        radial-gradient(46% 44% at 96% 60%,  rgba(19, 182, 230, .13), transparent 70%),
+        radial-gradient(40% 40% at 8%  4%,   rgba(124, 92, 255, .08), transparent 70%);
+}
+.hairline {
+    background-image:
+        linear-gradient(rgba(47, 107, 255, .05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47, 107, 255, .05) 1px, transparent 1px);
+    background-size: 46px 46px;
+}
+
+/* display font helper (Space Grotesk) */
+.font-display { font-family: 'Space Grotesk', 'Be Vietnam Pro', sans-serif; }
+
+/* inline SVG icon wrapper */
+.ico { display: inline-flex; }
+.ico svg { width: 100%; height: 100%; }
+
+/* survey option cards */
+.opt {
+    display: flex; align-items: center; gap: .6rem;
+    min-height: 48px; padding: .7rem .9rem;
+    border: 1.5px solid var(--color-base-300); border-radius: .7rem;
+    background: var(--color-base-100); cursor: pointer;
+    transition: .16s; font-size: .92rem; line-height: 1.25;
+    font-weight: 500; color: var(--color-base-content);
+}
+.opt:hover   { border-color: #9cc0ff; background: #f7faff; }
+.opt.on      { border-color: #2f6bff; background: linear-gradient(0deg, #eef4ff, #f7faff);
+               box-shadow: 0 4px 14px rgba(47,107,255,.12); color: #10306e; font-weight: 600; }
+.opt .tick   { width: 20px; height: 20px; border-radius: 6px; border: 1.6px solid #c3d3f0;
+               flex: none; display: grid; place-items: center; color: #fff; transition: .16s; }
+.opt.rd .tick { border-radius: 50%; }
+.opt.on .tick { background: #2f6bff; border-color: #2f6bff; }
+.opt .tick svg { width: 13px; height: 13px; opacity: 0; transition: .16s; }
+.opt.on .tick svg { opacity: 1; }
+
+/* rating / emoji blocks */
+.rate {
+    display: flex; flex-direction: column; align-items: center; gap: .25rem;
+    padding: .85rem .4rem; border: 1.5px solid var(--color-base-300);
+    border-radius: .8rem; background: var(--color-base-100);
+    cursor: pointer; transition: .16s; text-align: center;
+}
+.rate:hover { border-color: #9cc0ff; }
+.rate.on    { border-color: #2f6bff; background: linear-gradient(180deg, #f3f7ff, #ffffff);
+              box-shadow: 0 6px 18px rgba(47,107,255,.14); }
+.rate .n    { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 700; color: #9fb2d6; }
+.rate.on .n { color: #2f6bff; }
+
+/* live score pill */
+.scorepill { font-family: 'Space Grotesk'; }
+
+@media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .shadow, .shadow-lg, .shadow-xl, .shadow-sm { box-shadow: none !important; }
+}
 
 /* ── Survey Shell ─────────────────────────────────────────────────────────── */
 .survey-shell {
