@@ -1,6 +1,8 @@
 @extends($themeMaster)
 
 @section('head_extra')
+    {{-- Survey CSS — chỉ load trên trang này, không ảnh hưởng portal --}}
+    @vite('resources/css/survey.css')
     {{-- ai-readiness.js load trước app.js để window.aiReadiness sẵn trước Alpine.start() --}}
     @vite('resources/js/modules/ai-readiness.js')
     {{-- Fonts: preconnect trước, stylesheet load không blocking --}}

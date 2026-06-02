@@ -44,6 +44,7 @@ const JS_OUTPUT = {
 /* ─── Tên file CSS output ─── */
 const CSS_OUTPUT = {
   'app.css':          'assets/app.[hash].css',
+  'survey.css':       'assets/survey.[hash].css',
   'tom-select.css':   'assets/tom-select.[hash].css',
   'swiper.css':       'assets/swiper.[hash].css',
   'toastify.css':     'assets/toastify.[hash].css',
@@ -71,6 +72,8 @@ export default defineConfig(({ mode }) => {
           /* CORE */
           'resources/css/app.css',
           'resources/js/app.js',
+          /* SURVEY — load only on survey pages */
+          'resources/css/survey.css',
           /* MODULES */
           'resources/js/modules/toastify.js',
           'resources/js/modules/tom-select.js',
