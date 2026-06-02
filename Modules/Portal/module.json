@@ -1,0 +1,11 @@
+{
+    "name": "Portal",
+    "alias": "portal",
+    "description": "Cổng thông tin: Trang chủ, Blog, Liên hệ",
+    "keywords": [],
+    "priority": 5,
+    "providers": [
+        "Modules\\Portal\\Providers\\PortalServiceProvider"
+    ],
+    "files": []
+}

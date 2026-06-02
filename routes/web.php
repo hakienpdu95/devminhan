@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Modules\Core\Api\Exceptions\ApiException;
 use Modules\Core\Api\SanctumApiClient;
 
-// Home — AI Readiness landing page
-Route::middleware('theme:thuchoc,blank')->get('/', function (SanctumApiClient $client) {
+// Khảo sát AI Readiness — di chuyển sang /khaosat
+Route::middleware('theme:thuchoc,blank')->get('/khaosat', function (SanctumApiClient $client) {
     $cacheKey = 'survey.schema.ai-readiness-workflow';
     $cacheTtl = (int) config('bff.schema_cache_minutes', 10);
 
@@ -35,7 +35,7 @@ Route::middleware('theme:thuchoc,blank')->get('/', function (SanctumApiClient $c
     $submitUrl = $schema ? route('survey.submit', $schema['slug']) : null;
 
     return view('ai-readiness', compact('schema', 'submitUrl'));
-})->name('home');
+})->name('survey.khaosat');
 
 // Survey submit proxy — keeps CRM token server-side
 Route::post('/survey/{slug}/submit', function (Request $request, SanctumApiClient $client, string $slug) {
@@ -83,7 +83,3 @@ Route::middleware('theme:luxury')->group(function () {
     Route::get('/blog', fn () => view('blog.index'));
     Route::get('/contact', fn () => view('contact'));
 });
-
-// AI Readiness landing — thuchoc brand theme, blank layout (page owns its own nav/footer)
-Route::middleware('theme:thuchoc,blank')->get('/ai-readiness', fn () => view('ai-readiness'))
-    ->name('ai-readiness');

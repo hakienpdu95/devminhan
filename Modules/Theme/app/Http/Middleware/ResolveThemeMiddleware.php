@@ -33,6 +33,8 @@ class ResolveThemeMiddleware
         view()->share('theme', $theme);
         view()->share('themes', $this->resolveTheme->themes());
         view()->share('themeMaster', $this->resolveTheme->layoutMaster($layout ?: null));
+        // True khi route ép buộc theme — ngăn localStorage override server-set theme
+        view()->share('themeForced', $pageTheme !== '' && $this->resolveTheme->isForced($pageTheme));
 
         return $next($request);
     }

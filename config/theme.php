@@ -33,6 +33,7 @@ return [
         // ── Custom brand themes ──────────────────────────────
         'brand-light' => ['label' => 'Brand Light', 'scheme' => 'light'],
         'brand-dark'  => ['label' => 'Brand Dark',  'scheme' => 'dark'],
+        'portal'      => ['label' => 'Portal',      'scheme' => 'light'],
         'thuchoc'     => ['label' => 'Thuchoc',     'scheme' => 'light'],
 
         // ── Built-in (light) ─────────────────────────────────

@@ -60,3 +60,5 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 npx vite build --config vite.config.frontend.js
 
 # > Scan code trong folder spec/form.md và implement theo đúng spec đó
+
+Theo lịch sử , tại project này đã hoàn thành xong giao diện khảo sát survey khi truy cập '/'. Có sự thay đổi, hiện tại hãy di dời giao diện khảo sát sang router có slug là 'khaosat' nhé, còn router trang chủ thì hãy scan folder spec/homepagethuchocvn và convert giao diện đó, thiết lập làm trang chủ - cổng thông tin. Đọc file spec/portal.md và implement theo đúng spec đó, tuân thủ nguyên tắc để convert trang chủ với giao diện mới thành công.

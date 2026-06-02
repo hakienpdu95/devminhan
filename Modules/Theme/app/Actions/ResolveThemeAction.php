@@ -61,6 +61,11 @@ class ResolveThemeAction
         return config('theme.themes', []);
     }
 
+    public function isForced(string $theme): bool
+    {
+        return $this->isAvailable($theme);
+    }
+
     private function isAvailable(string $theme): bool
     {
         return array_key_exists($theme, config('theme.themes', []));

@@ -1,0 +1,18 @@
+{
+    "name": "nwidart/portal",
+    "description": "Portal module — cổng thông tin THUCHOCVN",
+    "authors": [],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Portal\\": "app/",
+            "Modules\\Portal\\Database\\Factories\\": "database/factories/",
+            "Modules\\Portal\\Database\\Seeders\\": "database/seeders/"
+        }
+    }
+}

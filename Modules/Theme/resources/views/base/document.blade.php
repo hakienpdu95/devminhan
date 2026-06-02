@@ -12,10 +12,12 @@
          a localStorage choice made before the cookie round-tripped. --}}
     <script nonce="{{ $cspNonce ?? '' }}">
         (function () {
+            @if(empty($themeForced))
             try {
                 var t = localStorage.getItem('theme');
                 if (t) document.documentElement.setAttribute('data-theme', t);
             } catch (e) {}
+            @endif
         })();
     </script>
 

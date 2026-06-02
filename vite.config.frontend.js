@@ -39,12 +39,14 @@ const JS_OUTPUT = {
   'swiper':       'assets/swiper.[hash].js',
   'qrcode':       'assets/qrcode.[hash].js',
   'ai-readiness': 'assets/ai-readiness.[hash].js',
+  'home':         'assets/home.[hash].js',
 };
 
 /* ─── Tên file CSS output ─── */
 const CSS_OUTPUT = {
   'app.css':          'assets/app.[hash].css',
   'survey.css':       'assets/survey.[hash].css',
+  'home.css':         'assets/home.[hash].css',
   'tom-select.css':   'assets/tom-select.[hash].css',
   'swiper.css':       'assets/swiper.[hash].css',
   'toastify.css':     'assets/toastify.[hash].css',
@@ -74,6 +76,9 @@ export default defineConfig(({ mode }) => {
           'resources/js/app.js',
           /* SURVEY — load only on survey pages */
           'resources/css/survey.css',
+          /* PORTAL HOME — load only on homepage */
+          'resources/css/home.css',
+          'resources/js/modules/home.js',
           /* MODULES */
           'resources/js/modules/toastify.js',
           'resources/js/modules/tom-select.js',
