@@ -29,5 +29,6 @@ jobs:
           script_stop: true
           command_timeout: 15m
           script: |
+            set -e
             cd /var/www/devminhan
             bash deploy.sh
