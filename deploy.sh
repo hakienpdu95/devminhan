@@ -5,7 +5,7 @@
 set -euo pipefail
 
 APP_DIR="/var/www/devminhan"
-PHP="/usr/bin/php8.4"
+PHP="/usr/bin/php8.5"
 BRANCH="main"
 
 cd "$APP_DIR"
@@ -97,10 +97,10 @@ log "[6/6] Reloading PHP-FPM..."
 # Opcache giữ bytecode compiled view/class cũ trong RAM của các worker PHP-FPM
 # đang chạy — view:cache ghi file mới trên đĩa nhưng FPM không tự đọc lại nếu
 # opcache.validate_timestamps=0. Reload PHP-FPM để worker mới load code mới.
-if sudo systemctl reload php8.4-fpm 2>/dev/null; then
+if sudo systemctl reload php8.5-fpm 2>/dev/null; then
     ok "PHP-FPM reloaded (opcache cleared)"
 else
-    err "Không reload được PHP-FPM — opcache có thể vẫn giữ code cũ! Cần cấu hình sudoers cho lệnh: systemctl reload php8.4-fpm"
+    err "Không reload được PHP-FPM — opcache có thể vẫn giữ code cũ! Cần cấu hình sudoers cho lệnh: systemctl reload php8.5-fpm"
 fi
 
 $PHP artisan up
