@@ -398,11 +398,12 @@ $deliverables = [
           </div>
         </template>
         @if (config('services.turnstile.enabled') && config('services.turnstile.key'))
-          <template x-if="currentStep===totalSteps-1">
-            <div class="mt-6 flex justify-center">
-              <x-turnstile id="surveyCaptcha" />
-            </div>
-          </template>
+          {{-- x-show (không phải x-if/template): widget Turnstile phải giữ NGUYÊN node DOM
+               khi qua lại giữa các bước. x-if xóa/tạo lại node mỗi lần currentStep đổi, khiến
+               Cloudflare mất dấu widget đã render → "Could not find widget" khi getResponse()/reset(). --}}
+          <div class="mt-6 flex justify-center" x-show="currentStep===totalSteps-1" x-cloak>
+            <x-turnstile id="surveyCaptcha" />
+          </div>
         @endif
         <!-- Nav -->
         <div class="no-print mt-8 pt-5 border-t border-base-300 flex items-center justify-between gap-3">
