@@ -19,10 +19,16 @@ cd "$APP_DIR"
 # mới nhất trên đĩa.
 if [ -z "${DEPLOY_REEXEC:-}" ]; then
     echo "[$(date '+%H:%M:%S')] [0/7] Pulling latest code..."
-    [ -f "$APP_DIR/.env" ] && cp "$APP_DIR/.env" /tmp/.env.devminhan-deploy.bak
+    # mktemp thay vì path cố định — tránh lỗi "Permission denied" nếu file backup
+    # cũ còn sót lại trên /tmp từ 1 lần chạy trước với owner/quyền khác.
+    ENV_BACKUP=""
+    if [ -f "$APP_DIR/.env" ]; then
+        ENV_BACKUP="$(mktemp /tmp/.env.devminhan-deploy.XXXXXX)"
+        cp "$APP_DIR/.env" "$ENV_BACKUP"
+    fi
     git fetch origin
     git reset --hard "origin/$BRANCH"
-    [ -f /tmp/.env.devminhan-deploy.bak ] && mv /tmp/.env.devminhan-deploy.bak "$APP_DIR/.env"
+    [ -n "$ENV_BACKUP" ] && [ -f "$ENV_BACKUP" ] && mv "$ENV_BACKUP" "$APP_DIR/.env"
     echo "[$(date '+%H:%M:%S')] ✓ Code updated → $(git log --oneline -1)"
 
     export DEPLOY_REEXEC=1
