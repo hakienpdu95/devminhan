@@ -7,6 +7,7 @@ set -euo pipefail
 APP_DIR="/var/www/devminhan"
 PHP="/usr/bin/php8.5"
 BRANCH="main"
+WEB_GROUP="www-data"   # group chạy PHP-FPM — cần ghi chung storage/ + bootstrap/cache với user deploy
 
 cd "$APP_DIR"
 
@@ -17,7 +18,7 @@ cd "$APP_DIR"
 # vừa pull về. Re-exec đảm bảo toàn bộ phần sau bước này luôn đọc từ file
 # mới nhất trên đĩa.
 if [ -z "${DEPLOY_REEXEC:-}" ]; then
-    echo "[$(date '+%H:%M:%S')] [0/6] Pulling latest code..."
+    echo "[$(date '+%H:%M:%S')] [0/7] Pulling latest code..."
     [ -f "$APP_DIR/.env" ] && cp "$APP_DIR/.env" /tmp/.env.devminhan-deploy.bak
     git fetch origin
     git reset --hard "origin/$BRANCH"
@@ -54,46 +55,59 @@ log "  Deploy thuchocvn.vn (devminhan) — $(date '+%Y-%m-%d %H:%M:%S')"
 log "  Branch: $BRANCH | Commit: $(git log --oneline -1) | Skip migrations: $SKIP_MIGRATIONS | Skip build: $SKIP_BUILD"
 log "═══════════════════════════════════════"
 
-# ── 1. PHP dependencies ────────────────────────────────────────
-log "[1/6] Installing PHP dependencies..."
+# ── 1. Quyền storage/ + bootstrap/cache ──────────────────────────
+# Composer/artisan bên dưới chạy bằng user deploy (qua SSH), nhưng PHP-FPM
+# runtime chạy bằng www-data — cả hai đều cần ghi storage/ + bootstrap/cache
+# (view cache, log, session). Nếu lệch quyền (vd: sau khi chown thủ công lúc
+# debug), Laravel sẽ lỗi `tempnam(): file created in the system's temporary
+# directory` khi compile Blade view. Chạy lại mỗi lần deploy để tự khắc phục
+# — best-effort, không chặn deploy nếu có file lạ không chmod được.
+log "[1/7] Đảm bảo quyền ghi storage/ + bootstrap/cache..."
+chmod -R ug+rwX "$APP_DIR/storage" "$APP_DIR/bootstrap/cache" 2>/dev/null || true
+find "$APP_DIR/storage" "$APP_DIR/bootstrap/cache" -type d -exec chmod g+s {} \; 2>/dev/null || true
+chgrp -R "$WEB_GROUP" "$APP_DIR/storage" "$APP_DIR/bootstrap/cache" 2>/dev/null || true
+ok "Quyền OK"
+
+# ── 2. PHP dependencies ────────────────────────────────────────
+log "[2/7] Installing PHP dependencies..."
 composer install --no-dev --optimize-autoloader --no-interaction --quiet
 ok "Composer done"
 
-# ── 2. Frontend build ──────────────────────────────────────────
+# ── 3. Frontend build ──────────────────────────────────────────
 if [ "$SKIP_BUILD" = "true" ]; then
-    log "[2/6] Skipping frontend build (mặc định — dùng --with-build để bật, hoặc quản trị tự chạy: npm run build)"
+    log "[3/7] Skipping frontend build (mặc định — dùng --with-build để bật, hoặc quản trị tự chạy: npm run build)"
 else
-    log "[2/6] Building frontend assets..."
+    log "[3/7] Building frontend assets..."
     npm ci --prefer-offline --silent
     npm run build --silent
     ok "Frontend built → public/build/"
 fi
 
-# ── 3. Maintenance mode ────────────────────────────────────────
-log "[3/6] Enabling maintenance mode..."
+# ── 4. Maintenance mode ────────────────────────────────────────
+log "[4/7] Enabling maintenance mode..."
 $PHP artisan config:clear
 $PHP artisan down --retry=10
 trap '$PHP artisan up; err "Deploy failed — maintenance mode disabled"' ERR
 
-# ── 4. Migration ────────────────────────────────────────────────
+# ── 5. Migration ────────────────────────────────────────────────
 if [ "$SKIP_MIGRATIONS" = "true" ]; then
-    log "[4/6] Skipping migrations (mặc định — dùng --with-migrations để bật)"
+    log "[5/7] Skipping migrations (mặc định — dùng --with-migrations để bật)"
 else
-    log "[4/6] Running database migrations..."
+    log "[5/7] Running database migrations..."
     $PHP artisan migrate --force
     ok "Migrations done"
 fi
 
-# ── 5. Rebuild cache ────────────────────────────────────────────
-log "[5/6] Rebuilding application cache..."
+# ── 6. Rebuild cache ────────────────────────────────────────────
+log "[6/7] Rebuilding application cache..."
 $PHP artisan config:clear  && $PHP artisan config:cache
 $PHP artisan route:clear   && $PHP artisan route:cache
 $PHP artisan view:clear    && $PHP artisan view:cache
 $PHP artisan event:clear   && $PHP artisan event:cache
 ok "Cache rebuilt"
 
-# ── 6. Reload PHP-FPM (xóa opcache) ──────────────────────────────
-log "[6/6] Reloading PHP-FPM..."
+# ── 7. Reload PHP-FPM (xóa opcache) ──────────────────────────────
+log "[7/7] Reloading PHP-FPM..."
 # Opcache giữ bytecode compiled view/class cũ trong RAM của các worker PHP-FPM
 # đang chạy — view:cache ghi file mới trên đĩa nhưng FPM không tự đọc lại nếu
 # opcache.validate_timestamps=0. Reload PHP-FPM để worker mới load code mới.
