@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\Core\Api\Exceptions\ApiException;
 use Modules\Core\Api\SanctumApiClient;
@@ -26,8 +27,18 @@ Route::middleware('theme:thuchoc,blank')->get('/khaosat', function (SanctumApiCl
                 if ($cacheTtl > 0) {
                     Cache::put($cacheKey, $schema, now()->addMinutes($cacheTtl));
                 }
+            } else {
+                // CRM trả về nhưng không success/data rỗng — log để biết status/message thật
+                // thay vì chỉ thấy trang fallback "Chưa tải được dữ liệu khảo sát".
+                Log::warning('survey.khaosat.schema_not_ok', [
+                    'status'  => $response->statusCode,
+                    'message' => $response->message,
+                ]);
             }
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            Log::error('survey.khaosat.schema_fetch_exception', [
+                'error' => $e->getMessage(),
+            ]);
             $schema = null; // API lỗi/timeout → render fallback ngay
         }
     }
@@ -54,7 +65,21 @@ Route::post('/survey/{slug}/submit', function (Request $request, SanctumApiClien
     try {
         $crm = $client->post("api/v1/surveys/{$slug}/submit", $validated);
     } catch (ApiException $e) {
+        Log::error('survey.submit.proxy_exception', [
+            'slug'  => $slug,
+            'error' => $e->getMessage(),
+        ]);
         return response()->json(['success' => false, 'message' => 'Không thể kết nối đến CRM. Vui lòng thử lại.'], 503);
+    }
+
+    if ($crm->statusCode >= 400) {
+        // Log kèm body thật từ CRM (vd lỗi validation/Turnstile cụ thể) — SanctumApiClient
+        // chỉ log status code, không log nội dung lỗi.
+        Log::warning('survey.submit.crm_rejected', [
+            'slug'   => $slug,
+            'status' => $crm->statusCode,
+            'data'   => $crm->data,
+        ]);
     }
 
     return response()->json($crm->toArray(), $crm->statusCode);
@@ -73,6 +98,10 @@ Route::get('/survey/{slug}/result', function (Request $request, SanctumApiClient
     try {
         $crm = $client->get("api/v1/surveys/{$slug}/result", $params, retryTimes: 0);
     } catch (ApiException $e) {
+        Log::error('survey.result.proxy_exception', [
+            'slug'  => $slug,
+            'error' => $e->getMessage(),
+        ]);
         return response()->json(['success' => false, 'message' => 'Không thể kết nối đến CRM.'], 503);
     }
 
