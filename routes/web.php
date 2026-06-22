@@ -48,6 +48,7 @@ Route::post('/survey/{slug}/submit', function (Request $request, SanctumApiClien
         'answers.*.field_key'       => ['required', 'string', 'max:255'],
         'answers.*.value'           => ['present'],
         'answers.*.other_text'      => ['nullable', 'string', 'max:1000'],
+        'cf-turnstile-response'     => ['nullable', 'string', 'max:2048'],
     ]);
 
     try {

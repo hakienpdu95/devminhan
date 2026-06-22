@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Space+Grotesk:wght@500;600;700&display=swap">
+    @if (config('services.turnstile.enabled') && config('services.turnstile.key'))
+        <x-turnstile.scripts />
+    @endif
 @endsection
 
 @section('title', ($schema['title'] ?? 'Khảo sát AI Readiness') . ' — THUCHOCVN')
@@ -394,6 +397,13 @@ $deliverables = [
             </div>
           </div>
         </template>
+        @if (config('services.turnstile.enabled') && config('services.turnstile.key'))
+          <template x-if="currentStep===totalSteps-1">
+            <div class="mt-6 flex justify-center">
+              <x-turnstile id="surveyCaptcha" />
+            </div>
+          </template>
+        @endif
         <!-- Nav -->
         <div class="no-print mt-8 pt-5 border-t border-base-300 flex items-center justify-between gap-3">
           <button type="button" x-on:click="prev()" class="btn btn-ghost rounded-full"

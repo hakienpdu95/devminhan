@@ -22,14 +22,18 @@ class SecurityHeadersMiddleware
             "default-src 'self'",
             // 'unsafe-eval' needed by Alpine.js (uses new Function() internally).
             // nonce whitelists the anti-FOUC inline script only.
-            "script-src 'self' 'unsafe-eval' 'nonce-{$nonce}'",
+            // challenges.cloudflare.com serves the Turnstile widget script.
+            "script-src 'self' 'unsafe-eval' 'nonce-{$nonce}' https://challenges.cloudflare.com",
             // Google Fonts stylesheet served from fonts.googleapis.com.
             // 'unsafe-inline' needed for Tailwind/DaisyUI injected styles in dev.
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "img-src 'self' data: https:",
             // fonts.gstatic.com serves the actual font files.
             "font-src 'self' https://fonts.gstatic.com https:",
-            "connect-src 'self'",
+            // Turnstile script calls back to challenges.cloudflare.com to verify.
+            "connect-src 'self' https://challenges.cloudflare.com",
+            // Turnstile widget renders inside an iframe from challenges.cloudflare.com.
+            "frame-src https://challenges.cloudflare.com",
             "frame-ancestors 'none'",
         ]);
 

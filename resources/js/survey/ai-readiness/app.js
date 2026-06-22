@@ -275,6 +275,13 @@ export function aiReadiness() {
     async submit() {
       if (this.submitting || this.submitted) return; // chặn double-submit
       if (!this.validateAll()) return;
+
+      // Widget Turnstile (nếu bật) phải được người dùng hoàn thành trước khi gửi.
+      if (window.turnstile && !window.turnstile.getResponse()) {
+        this._toast('Vui lòng hoàn thành xác minh bảo mật trước khi gửi.');
+        return;
+      }
+
       this.submitting = true;
       this.loadError  = null;
       try {
@@ -317,6 +324,8 @@ export function aiReadiness() {
         this.loadError = 'Lỗi kết nối. Vui lòng kiểm tra mạng và thử lại.';
       } finally {
         this.submitting = false;
+        // Token Turnstile chỉ dùng được 1 lần — reset để người dùng có thể thử lại nếu submit thất bại.
+        if (!this.submitted) window.turnstile?.reset();
       }
     },
 
@@ -329,7 +338,9 @@ export function aiReadiness() {
       }
       const params = new URLSearchParams(window.location.search);
       const ref    = params.get('ref') || params.get('email') || localStorage.getItem('userId') || null;
-      return { respondent_ref: ref, answers: answersArr };
+      const payload = { respondent_ref: ref, answers: answersArr };
+      if (window.turnstile) payload['cf-turnstile-response'] = window.turnstile.getResponse() || '';
+      return payload;
     },
 
     /* ── Poll kết quả chấm điểm từ CRM ── */
